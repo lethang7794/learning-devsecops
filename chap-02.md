@@ -838,7 +838,92 @@ fi
 
 ### Looping
 
-### Lists and Arrays
+A loop is a block of code that _iterates_ a list of commands as long as the **loop _control condition_** is true.
+
+Bash supports 3 types of loops: `for`, `while`, `until`.
+
+#### for
+
+`for` loop run a set of commands for each item in a list.
+
+- Syntax
+
+  ```bash
+  for <name> in <words>
+  do
+    <commands>
+  done
+  ```
+
+- Example
+
+  ```bash
+  for item in ~/effective-shell/* # Loop through all items in a folder
+  do
+    echo "Found: $item"           # Print the item's full path to the screen
+  done
+  ```
+
+  <details>
+  <summary>
+  Output
+  </summary>
+
+  ```
+  Found: /home/dwmkerr/effective-shell/data
+  Found: /home/dwmkerr/effective-shell/docs
+  Found: /home/dwmkerr/effective-shell/logs
+  Found: /home/dwmkerr/effective-shell/pictures
+  Found: /home/dwmkerr/effective-shell/programs
+  Found: /home/dwmkerr/effective-shell/quotes
+  Found: /home/dwmkerr/effective-shell/scripts
+  Found: /home/dwmkerr/effective-shell/templates
+  Found: /home/dwmkerr/effective-shell/text
+  Found: /home/dwmkerr/effective-shell/websites
+  ```
+
+  </details>
+
+See, [Effective Shell - For loop](https://effective-shell.com/part-4-shell-scripting/loops-and-working-with-files-and-folders/?_highlight=loop#the-for-loop-index-)
+
+#### while
+
+A `while` loop iterates through a block of code only when a condition remains true.
+
+If the condition isn’t true to begin with, the `while` loop will never execute the code within.
+
+See, [Effective Shell - While loop](https://effective-shell.com/part-4-shell-scripting/loops-and-working-with-files-and-folders?_highlight=loop#the-while-loop)
+
+#### until
+
+The `until` loop is like the while loop except that the code will only be executed when a condition remains false.
+
+If the condition is true to begin with, then the code within the until loop will never execute
+
+See, [Effective Shell - Until loop](https://effective-shell.com/part-4-shell-scripting/loops-and-working-with-files-and-folders?_highlight=loop#the-until-loop)
+
+### Arrays
+
+- Arrays are variables that can store multiple values.
+
+- An array is created by using the equals symbol and putting the array values in parenthesis.
+
+  ```bash
+  days=("Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday")
+  ```
+
+- Once you have defined your array you can retrieve an element at a given index by using the square bracket notation shown below:
+
+  ```bash
+  echo "The first day is: ${days[0]}" # Monday
+  echo "The last day is: ${days[6]}"  # Sunday
+  ```
+
+> [!CAUTION]
+> In Bash, arrays start at index zero.
+> In Zsh, arrays start at index one.
+
+See [Effective Shell - Arrays](https://effective-shell.com/part-3-manipulating-text/variables-reading-input-and-mathematics/#arrays)
 
 ## Summary
 
