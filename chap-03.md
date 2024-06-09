@@ -78,7 +78,7 @@ When files are created, they are usually given:
 You can change the
 
 - owner and group of a file by using the `chown` and `chgrp` commands.
-- permissions of a file by using the `chmod` comman.
+- permissions of a file by using the `chmod` command.
 
 > [!NOTE]
 > When using `chmod`, the permissions can be specified in symbolic notation or octal notation
@@ -329,40 +329,361 @@ checksum ~ one-way hashed
 
 ## Providing Availability
 
-### Service-Level Agreements and Service-Level Objectives
+To increase availability, the single points of failure needs to be eliminated.
 
-### Identifying Stakeholders
+With the advent of cloud computing, the cost of providing availability in computing has decreased:
 
-### Identifying Availability Needs
+- Deployments in multi-cloud providers, in multi-regions is achievable.
 
-### Defining Availability and Estimating Costs
+### Service-Level Agreement (SLA) and Service-Level Objectives (SLOs)
+
+SLA - Service-Level Agreement
+: PROMISE: The agreement you make to your clients, end users
+: External
+: e.g.
+: - How much downtime is acceptable during a period (a month/quarter/year)?
+: - Monthly Uptime Percentage of no less least 99.9%
+
+SLOs - Service-Level Objectives
+: GOAL: The objectives your team must hit to meet that agreement
+: Internal
+: e.g.
+: - Each services must a lot less than SLA - 99.99%, 99.999%
+
+SLIs - Service-Level Indicator
+: MEASURE: The real indicator about the performance
+: External & Internal
+: e.g.
+: - Customer looks to SLI to demand a refund.
+
+### Defining SLA
+
+#### Identifying Stakeholders
+
+stakeholders
+: who paid for the app:
+: - so the app can be developed: have direct influence on the decisions about the app & it's availability
+: - so they can use it: need to be represented by user groups, internal customer services
+
+#### Identifying Availability Needs
+
+The availability needs can be
+
+- provided:
+
+  - directly by the stakeholders
+  - indirectly via interviews/meetings
+
+- gathered through observation (more accurate)
+
+> [!NOTE]
+> Regardless of the method, you should verify back with the logs (traffic/request logs).
+
+> [!CAUTION]
+> The seasonal and cyclical activities should be included when identifying availability needs.
+>
+> e.g. A monthly report run at the end of a month/quarter may be missed by everyone.
+
+> [!IMPORTANT]
+> But what exactly availability means?
+>
+> - Which level?
+>   - Network: IP
+>   - Transport: TCP
+>   - Application: HTTP
+> - How long is latency?
+
+How do you know that the system has that availability? Monitoring, observation.
+
+> [!IMPORTANT]
+> Evaluation criteria of a monitoring software:
+>
+> - Protocols
+> - Complexity of the check
+> - Alerting
+> - Scaling
+> - ...
+
+#### Estimating Costs
+
+The cost for availability may increase exponentially.
+
+| The level of availability | % uptime | Downtime per year |        |       | Downtime per day |       |       |
+| ------------------------- | -------- | ----------------- | ------ | ----- | ---------------- | ----- | ----- |
+|                           |          | (day)             | (hour) | (min) | (hour)           | (min) | (sec) |
+| One 9                     | 90%      | 36.5 day          |        |       | 2.4h             |       |       |
+| Two 9s                    | 99%      | 3.65 day          |        |       |                  | 14m   |       |
+| Three 9s                  | 99.9%    | 0.365 day         | ~ 9h   |       |                  | 1.4m  |       |
+| Four 9s                   | 99.99%   |                   | ~ 1h   | 55m   |                  |       | 9s    |
+| Five 9s                   | 99.999%  |                   |        | 5.5m  |                  |       | 0.9s  |
+| Six 9s                    | 99.9999% |                   |        | 0.5m  |                  |       | 0.09s |
 
 ## What About Accountability?
 
-### Site Reliability Engineering
+accountability
+: _Who_ did _what_ & _when_ did they do it?
+
+In computing, these info are available via logging.
+
+For Linux, logging is handled by:
+
+- `syslog`: old system, easy to use but hard to scale.
+- `systemd`: new system, plain-text at `/var/log`.
+
+> [!NOTE]
+> There are a lot of things needs to be done with log:
+>
+> - Monitor the logs in realtime
+> - Import log entries to a database
+> - Automatically archive old logs
+
+### Site Reliability Engineering (SRE)
+
+The main goal of SRE is providing visibility & transparent throughout the SDLC,
+
+This is done by:
+
+- Monitoring
+- Logging, log analysis
+
+> [!CAUTION]
+> Monitoring & logging can
+>
+> - decreased performance of the system.
+> - increase cost:
+>   - doing monitor
+>   - store the logging
+
+To balance the cost and the amount of logs, you can:
+
+- Use feature flag to indicate the level of log
+- Ensure the applications, services supports
+  - changing its functions depends on the feature flag without restarting/re-initializing.
+  - monitoring automatically when deployed (e.g. Using Ansible)
+
+> [!NOTE]
+> With feature flag, an CI/CD system can quickly enable/disable features of the applications.
+
+> [!NOTE]
+> How much monitoring should we have?
+>
+> As much as we can get:
+>
+> - It still depends on the type of services, the longevity of each nodes.
+> - But more metrics is better than not enough metrics.
 
 ### Code Traceability and Static Analysis
 
+#### Code Traceability
+
+code traceability (Programming)
+: tracing a line of code backward through the source code management history to the original change request that caused the developer to write it
+
+code traceability (Testing)
+: step through the code line by line, watching in-memory data as it changes
+
+code traceability (DevSecOps)
+: step through the code to validate & verify its operation:
+: - use build-time flags & feature flags to add more debugging instrumentation & logging
+: - e.g. A microservice is slow
+
+#### Static analysis and code review
+
+static analysis (static program analysis)
+: analysis of computer programs performed without executing them
+: e.g. linter, CVEs scanner...
+
+dynamic program analysis
+: analysis of computer programs performed by executing them
+: e.g. function testing, code coverage, fuzzing, concurrency errors, performance analysis...
+
+code review
+: review process to adherence to the coding style & quality standard of an organization
+
+Static analysis and code review can identify these kind of issues:
+
+- Errors & bugs (unexpected behaviors)
+
+- Maintaining issues
+
+  e.g. Ternary may be prohibited
+
+- Security issues
+
+  e.g. The code run as expected, but a user can see other users's resources.
+
+- CVEs
+
+- Compliance & Regulation issues
+
+> [!IMPORTANT]
+> Static analysis tools can be integrated at:
+>
+> - Local environment:
+>   - While developing: code changed
+>   - Before CI: code committed/pushed
+> - CI/CD:
+>   - Before merged
+
+#### Compliance & regulatory issues
+
+Any organization needs to act in compliance with the regulation.
+
+> [!CAUTION]
+> False positives: a test result incorrectly indicates the presence of a condition.
+>
+> Static analysis can have false positives, which can cause a lot of overhead.
+
 ## Becoming Security Aware
+
+Computer security problems can be traced back to 2 major reason:
+
+- Lack of awareness (from developers, operations...)
+- Lac of time imposed by often-**_artificial_ deadlines**.
 
 ### Finding Formal Training
 
+Security training is available at many forms:
+
+- On-site
+- Virtual
+- Classroom
+- Hand-ons
+
+Ideally, an organization can have training that is customized to the organization needs & its technology (programming languages, infrastructures...)
+
+There are also generalized training & certificates from
+
+- [SANS Institute](https://www.sans.org/about/)
+- [ISC2](https://www.isc2.org/):
+  - [Certificates](https://www.isc2.org/certifications)
+    - CC – Certified in Cybersecurity - an entry level certificate
+    - CISSP - Certified Information Systems Security Professional - is the gold standard for security certifications
+
 ### Obtaining Free Knowledge
+
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/): a standard awareness document for developers and web application security
+- [OWASP Cheat Sheet Series](https://owasp.org/www-project-cheat-sheets/): simple good practice guides for application developers that the majority of developers will actually be able to implement.
+
+#### Input valid
+
+Developers who integrate security into the development process assume that all input/external data
+
+- is incorrect, e.g. empty data, too long...
+- may have been entered with malicious intent
+
+All data needs to be valid:
+
+- on the client but still give good UX.
+- on the server
 
 ### Enlightenment Through Log Analysis
 
-## Practical Implementation: OWASP ZAP
+Servers are under attack all the times, there are bot attacks that scan for:
 
-### Creating a Target
+- Open ports
+- CVEs
+- Default password
 
-### Installing ZAP
+By examining log files, you can get enlightenment about the type of attacks.
 
-### Getting Started with ZAP: Manual Scan
+## Practical Implementation: ZAP
+
+### Why ZAP?
+
+Zed Attack Proxy (`ZAP`) is cross-platform software used for vulnerability scanning of web applications.
+
+> [!TIP]
+> Zed Attack Proxy `ZAP` (its website is [zaproxy.org](https://www.zaproxy.org)) is originally an project from OWASP, but has [join](https://www.zaproxy.org/blog/2023-08-01-zap-is-joining-the-software-security-project/) Software Security Project (SSP) - an initiative of the Linux Foundation.
+
+ZAP provides a graphical interface and trivially easy method to scan for common problems highlighted on the OWASP website.
+
+Additional functionality is freely available from a variety of add-ons in the [ZAP Marketplace](https://www.zaproxy.org/addons/), accessible from within the ZAP client.
+
+### What is ZAP?
+
+At its core, ZAP is what is known as a `man-in-the-middle proxy`.
+
+ZAP:
+
+- stands between the tester’s browser and the web application
+- will:
+  - intercept, inspect messages sent between browser and web application
+  - modify the contents if needed
+  - forward those packets on to the destination.
+
+See:
+
+- [ZAP - Getting Started](https://www.zaproxy.org/getting-started/)
+
+### Who can use ZAP?
+
+ZAP provides functionality for a range of skill levels – from developers, to testers new to security testing, to security testing specialists.
+
+### Where ZAP can run?
+
+ZAP supports
+
+- Major OS: Linux, Windows, Mac
+- Docker
+- CI: GitHub Actions
+
+See <https://www.zaproxy.org/download/>
+
+### ZAP in action
+
+> [!WARNING]
+> A scan by ZAP can be interpreted as an attack.
+>
+> You should
+>
+> - scan only targets that you have permission to test.
+> - also check with your hosting company and any other services such as CDNs that may be affected before running a ZAP scan.
+
+#### Creating a Target
+
+We'll use OWASP [Juice Shop](https://github.com/juice-shop/juice-shop) - a demo web app encompasses vulnerabilities from the entire OWASP Top Ten along with many other security flaws found in real-world applications!
+
+> [!CAUTION]
+> Don't use someone public web application as a target of your ZAP test, you may go to jail.
+
+Juice Shop can runs
+
+- on a variety of platforms: including Node.js, Docker, and Vagrant,
+- or as an instance on Amazon Web Services (AWS) Elastic Compute Cloud (EC2), Azure, or Google Compute Engine
+
+> [!TIP]
+> A ruining instance of the latest version of OWASP Juice Shop is available at: <http://demo.owasp-juice.shop>
+
+> [!WARNING]
+> The demo instance is a deployment-test and sneak-peek instance only!
+> You are not supposed to use this instance for your own hacking endeavors! No guaranteed uptime! Guaranteed stern looks if you break it!
+
+#### Installing ZAP
+
+#### Getting Started with ZAP
+
+##### ZAP Mode
+
+- `Safe`: no potentially dangerous operations permitted.
+- `Protected`: (Default) you can only perform (potentially) dangerous actions on URLs in the scope.
+- `Standard`: does not restrict anything.
+- `ATTACK`: new nodes that are in scope are actively scanned as soon as they are discovered.
+
+See <https://www.zaproxy.org/docs/desktop/start/features/modes/>
+
+##### Manual Scan
+
+##### Automation Scan
 
 ## Summary
+
+- Integrate security throughout DevOps to create DevSecOps.
+- CIA triad and security.
+- Zed Attack Proxy (ZAD).
 
 [SDP]: https://en.wikipedia.org/wiki/Sender_Policy_Framework
 [DKIM]: https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail
 [DMARC]: https://en.wikipedia.org/wiki/DMARC
 
-[^DMARC]: https://www.twilio.com/docs/sendgrid/ui/sending-email/dmarc
+[^DMARC]: <https://www.twilio.com/docs/sendgrid/ui/sending-email/dmarc>
