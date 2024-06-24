@@ -4,7 +4,7 @@ By the time an application reaches the production environment:
 
 - The code should have been reviewed, tested many times
 - The deployment to an environment (qa, uat, ...) should have been done many times
-- There should be little room for suprises.
+- There should be little room for surprises.
   -> This is also known as _shift-left_
 
 ## Continuous Integration and Continuous Deployment (CI/CD)
@@ -27,7 +27,7 @@ By the time an application reaches the production environment:
 > [!NOTE]
 > Ansible - just like Chef, Puppet - is configuration management tools:
 >
-> - can operate without agent (agentless)
+> - can operate without agent (agent-less)
 > - use declarative approach (configuration is managed as code in YAML/INI format)
 
 #### Ansible concepts
@@ -67,7 +67,7 @@ e.g. What to do to make these server up-and-running as a DNS server
 With Ansible, you can
 
 - create a desired state for environments
-- execute automation tasks to config these environment
+- execute automation tasks to configure these environment
   with a single command `ansible-playbook` by using a configuration as code approach.
 
 ### Using Jenkins for CI/CD
@@ -83,7 +83,7 @@ Automate your development workflow:
 
 - building projects
 - running tests
-- static code analysics
+- static code analysis
 - deployment
 - ...
   so you can focus on work that matters most.
@@ -169,42 +169,97 @@ n a digital signature system,
 > [!WARNING]
 > Any one have your private key can do malicious things in your name.
 
-| When? | What?                            | How                   | Where?                                                                                                                                                                                                                                    | Note |
-| ----- | -------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 1.    | An SSH **key-pair** is generated | e.g. Use `ssh-keygen` | Anywhere                                                                                                                                                                                                                                  |
-| 2.    | The key-pair is distributed      |                       |                                                                                                                                                                                                                                           |
-| 2.a.  | - to the server: **public key**  |                       | In file `~/.ssh/authorized_keys` on the s                                                                                                                                                                                                 |
-| 2.b.  | - to the client: **private key** |                       | In directory `~/.ssh/` on the client                                                                                                                                                                                                      |
-| 3.    | Login to the server              | Use `ssh`             | On the client - The first time you connect to a server, you need to confirm the server by the **fingerprint** of the public key.<br>- After you confirmed, the server's **public key** is saved to the client's `known_hosts` <br>- <br>- |
-|       |                                  |                       |                                                                                                                                                                                                                                           |
-|       |                                  |                       |                                                                                                                                                                                                                                           |
+| When? | What?                            | How                   | Where?                                    | Note                                                                                                                                                                                                            |
+| ----- | -------------------------------- | --------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.    | An SSH **key-pair** is generated | e.g. Use `ssh-keygen` | Anywhere                                  |                                                                                                                                                                                                                 |
+| 2.    | The key-pair is distributed      |                       |                                           |                                                                                                                                                                                                                 |
+| 2.a.  | - to the server: **public key**  |                       | In file `~/.ssh/authorized_keys` on the s |                                                                                                                                                                                                                 |
+| 2.b.  | - to the client: **private key** |                       | In directory `~/.ssh/` on the client      |                                                                                                                                                                                                                 |
+| 3.    | Login to the server              | Use `ssh`             | On the client                             | - The first time you connect to a server, you need to confirm the server by the **fingerprint** of the public key.<br>- After you confirmed, the server's **public key** is saved to the client's `known_hosts` |
+|       |                                  |                       |                                           |                                                                                                                                                                                                                 |
+|       |                                  |                       |                                           |                                                                                                                                                                                                                 |
 
-> [!NOTE]
-> Public/Private key-pair vs Fingerprint?
->
-> - Private key:
-> - Public key: one of the two key of the public/private key-pair
-> - Fingerprint (Public key fingerprint): a short hash of the public key, so human can compare 2 public keys
+###### Key-pair, public/private key, fingerprint, randomart image
+
+- Private key: is known only to you and it should be safely guarded
+
+  ```bash
+  -----BEGIN OPENSSH PRIVATE KEY-----
+  b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+  QyNTUxOQAAACCLdbmJdwnuwFEb4syAWfwkFrkVEbTOM28u9TDlA5D5qgAAAJDy28+G8tvP
+  hgAAAAtzc2gtZWQyNTUxOQAAACCLdbmJdwnuwFEb4syAWfwkFrkVEbTOM28u9TDlA5D5qg
+  AAAEC78OkniXvREV3umKoZY3r+jYPXXAyocmGV0gFf+xmKZYt1uYl3Ce7AURvizIBZ/CQW
+  uRURtM4zby71MOUDkPmqAAAAC2xxdEBsZy1ncmFtAQI=
+  -----END OPENSSH PRIVATE KEY-----
+  ```
+
+- Public key: can be shared freely with any SSH server to which you wish to connect.
+
+  ```bash
+  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIt1uYl3Ce7AURvizIBZ/CQWuRURtM4zby71MOUDkPmq username@hostname
+  ```
+
+- Passphrase: an extra protection layer for the private key, used to encrypt/decrypt the private key on the client
+
+- Fingerprint (Public key fingerprint): a short hash of the public key, provides an easy way to visually identifying the key
+
+  e.g.
+
+  - SHA256
+
+    ```bash
+    SHA256:qkb5wD2QW8+ASMWiGnSEEE/heGuugC9gH20yFpq/jn0 username@hostname
+    ```
+
+  - MD5
+
+    ```bash
+    MD5:73:ee:67:ef:53:2b:84:d7:4e:bc:5c:14:78:90:a5:53 username@hostname
+    ```
+
+- Randomart image: an even easier way for humans to identify the key (fingerprint)
+
+  e.g.
+
+  ```bash
+  +--[ED25519 256]--+
+  |+.==.            |
+  | Bo..            |
+  |oo=o o           |
+  |o..o+ o          |
+  |..=.o* +S        |
+  |+* =*oo.o        |
+  |= =.=o..         |
+  |oooo.E.          |
+  |.oo=+            |
+  +----[SHA256]-----+
+  ```
 
 ###### SSH Key format and key type
 
 The following SSH key formats are supported by OpenSSH:
 
-- `PEM` (PEM public key): OpenSSL's format - still used by GitHub
-- `PKCS8` (PKCS8 public or private key)
-- [`RFC4716`](https://www.ietf.org/rfc/rfc4716.txt): aka `SSH2` - Default when exporting
-- OpenSSH's own format: Default for creating
+| SSH key format   | Note                   | aka              |
+| ---------------- | ---------------------- | ---------------- |
+| `PEM`            | Used by GitHub         | OpenSSL's format |
+| `PKCS8`          |                        |                  |
+| `RFC4716`[^1]    | Default when exporting | SSH2             |
+| OpenSSH's format | Default when creating  |                  |
 
-The fowlloing SSH key type are supported by OpenSSH:
+The following SSH key type are supported by OpenSSH:
 
-- `dsa` (Depracated)
-- `rsa`: Greatest portability
-- `ecdsa`: Balance, More compatible
-- `ed25519` (Default): Best security
+| SSH key type | Note               | Pros / Cons                  | Example                               |
+| ------------ | ------------------ | ---------------------------- | ------------------------------------- |
+| `rsa`        |                    | Greatest portability         | `ssh-keygen -b 4096`                  |
+| `dsa`        | (Deprecated)       |                              |                                       |
+| `ecdsa`      | (Prefer `ed25519`) | Political/technical concerns |                                       |
+| `ed25519`    | (Default)          | Best security                | `ssh-keygen -t ed25519`, `ssh-keygen` |
 
 > [!TIP]
-> There are also `ecdsa-sk`, `ed25519-sk`: created with FIDO/U2F hardware token, e.g. YubiKey
-> `-sk` stands for _security key_
+> There are also `ecdsa-sk`, `ed25519-sk`:
+>
+> - These key type are created with FIDO/U2F hardware token, e.g. YubiKey
+> - `-sk` stands for _security key_
 
 ##### Transfer files between servers
 
@@ -219,4 +274,50 @@ The fowlloing SSH key type are supported by OpenSSH:
 
 ## Monitoring
 
+The complexity to deploy a modern application has increased significantly:
+
+- Many organizations even requires no downtime between deployments.
+
+To keep the complexity under control, you need to _monitor it_ to know
+
+- **what happening** with the application
+- **how it's running**
+
+### Best practices for monitoring
+
+- Visibility means fix-ability:
+
+  e.g. Knowing about an outrage before someone call you can give you some time.
+
+- Triage is important
+
+  e.g. Which problem should you spend your time?
+
+- Shift downtime left with instrumentation enabled
+
+  e.g. Downtime in non-production environments is also needed to be fixed early
+
+- Focus on important metrics
+
+  e.g.
+
+  - I/O latency for a database is important metric
+  - Requests/second, request latency is important metrics for a web server
+
+- Don’t forget dependencies
+
+  e.g. Network latency is uncontrolled.
+
+- Alerts need to be actionable
+
+  e.g. No one care if a job they don't care about success.
+
+  If a job is not actionable, it should be a log not an alert.
+
 ## Summary
+
+- Ansible: provision infrastructure
+- Jenkins: create CI/CD pipelines
+- Monitoring & best practices
+
+[^1]: (https://www.ietf.org/rfc/rfc4716.txt)
