@@ -123,7 +123,7 @@ In a public-key encryption system,
 - anyone with a _**public key** can encrypt_ a message, yielding a ciphertext,
 - but only those who know the corresponding private key can decrypt the ciphertext to obtain the original message.
 
-n a digital signature system,
+In a digital signature system,
 
 - a sender can use a private key together with a message to create a signature.
 - anyone with the corresponding _**public key** can verify_ whether the signature matches the message, but a forger who does not know the private key cannot find any message/signature pair that will pass verification with the public key
@@ -179,7 +179,7 @@ n a digital signature system,
 |       |                                  |                       |                                           |                                                                                                                                                                                                                 |
 |       |                                  |                       |                                           |                                                                                                                                                                                                                 |
 
-###### Key-pair, public/private key, fingerprint, randomart image
+###### Key-pair, public/private key, passphrase, fingerprint, randomart image
 
 - Private key: is known only to you and it should be safely guarded
 
