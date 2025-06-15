@@ -1,17 +1,15 @@
 # Summary
 
-[Preface](./preface.md)
+[Preface](./chap-00.md)
 
-- [An Introduction to DevOps and Software Delivery ](./chap-01.md)
-- [How to Manage Your Infrastructure as Code ](./chap-02.md)
-- [How to Deploy Many Apps: Orchestration, VMs, Containers, and Serverless](./chap-03.md)
-- [How to Version, Build, and Test Your Code ](./chap-04.md)
-- [How to Set Up CI and CD ](./chap-05.md)
-- [How to Work with Multiple Teams and Environments ](./chap-06.md)
-- [How to Set Up Networking ](./chap-07.md)
-- [How to Secure Communication and Storage ](./chap-08.md)
-- [How to Store Data ](./chap-09.md)
-- [How to Monitor Your Systems: Metrics, Logs, Alerts ](./chap-10.md)
-- [The Future of DevOps and Software Delivery ](./chap-11.md)
+- [The Need for DevSecOps](./chap-01.md)
+- [Foundational Knowledge in 25 Pages or Less](./chap-02.md)
+- [Integrating Security](./chap-03.md)
+- [Managing Code and Testing](./chap-04.md)
+- [Moving Toward Deployment](./chap-05.md)
+- [Deploy, Operate, and Monitor](./chap-06.md)
+- [Plan and Expand](./chap-07.md)
+- [Beyond DevSecOps](./chap-08.md)
 
-[Recommended Resources](./appendix-a.md)
+[Appendix A. Ports and Protocols](./appendix-a.md)
+[Appendix B. Command Reference](./appendix-b.md)

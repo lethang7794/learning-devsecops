@@ -2,8 +2,8 @@
 authors      = [ "Le Quang Thang" ]
 language     = "en"
 multilingual = false
-src          = ""                      # Root of repo
-title        = "Notes for DevOps Book"
+src          = ""                             # Root of repo
+title        = "Notes for Learning DevSecOps"
 
 [preprocessor.callouts]
 [preprocessor.alerts]
@@ -22,9 +22,9 @@ preferred-dark-theme = "macchiato"
 
 smart-punctuation = true
 
-site-url           = "/devops-book/"
-git-repository-url = "https://github.com/lethang7794/devops-book"
-edit-url-template  = "https://github.com/lethang7794/devops-book/edit/main{path}"
+site-url           = "/learning-devsecops/"
+git-repository-url = "https://github.com/lethang7794/learning-devsecops"
+edit-url-template  = "https://github.com/lethang7794/learning-devsecops/edit/main{path}"
 
 additional-js = [
   "theme/mermaid/mermaid.min.js",
