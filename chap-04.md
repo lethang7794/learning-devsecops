@@ -380,11 +380,11 @@ See, https://git-scm.com/docs/git-status#_short_format
 
 ##### The lifecycle of the status of a file in working tree of a Git repo
 
-![[Pasted image 20240612164715.png]]
+![ ](assets/chapter-4/git-repo--file-lifecycle.png)
 
 ##### 3 main sections of a git Project
 
-![[Pasted image 20240612191935.png]]
+![ ](assets/chapter-4/git-repo--3-main-sections.png)
 
 ### How Git stores data?
 
@@ -395,12 +395,17 @@ See, https://git-scm.com/docs/git-status#_short_format
 > - The changes made to each file (**delta**)
 >   -> File-based changes, delta-based version control.
 >
-> ![[Pasted image 20240613170918.png]]
+> ![ ](assets/chapter-4/hot-git-stores-data.png)
 
 Git stores data as **snapshots** of the project overtime.
 
-- Every time you commit (save the state - ~ a version - of the project), Git: - takes a snapshot of what all files look like at that moment - if a file has not changed, Git doesn't store the file again, it just links to the previous identical file. - stores a reference to that snapshot
-  ![[Pasted image 20240613171003.png]]
+- Every time you commit (save the state - ~ a version - of the project), Git:
+
+  - takes a snapshot of what all files look like at that moment
+    - if a file has not changed, Git doesn't store the file again, it just links to the previous identical file.
+  - stores a reference to that snapshot
+
+  ![ ](assets/chapter-4/git-snapshot.png)
 
 > [!IMPORTANT]
 > Git is like a mini file-system.
@@ -429,21 +434,23 @@ Git stores data as **snapshots** of the project overtime.
 > - It's lightweight:
 >   - Operation on branch is nearly instantaneous
 >   - Switching between branches is just as fast
+
 #### What is a commit?
-Remember, 
+
+Remember,
+
 - Git doesn't store data as a series of changesets, but instead as a series of **snapshots**.
-- Git has integrity:
-	- Everything is checksummed before it's stored
-	- Everything is then referred to by that checksum
-When you make a commit, Git:
+- Git has integrity: - Everything is checksummed before it's stored - Everything is then referred to by that checksum
+  When you make a commit, Git:
 - (stores the content as a snapshot)
 - stores the commit as a _commit object_ that contains
-	- a pointer to the **snapshot** of the content
-	- author's name & email
-	- commit's message
-	- pointers to its parent commits
+  - a pointer to the **snapshot** of the content
+  - author's name & email
+  - commit's message
+  - pointers to its parent commits
 
 > [!NOTE] How Git stores a snapshot of your project?
+>
 > - Each files is checksummed and stored in the bare repository (`.git`) as a _blob object_
 > - A _tree object_ is created to
 >   - lists the content of the directories.
@@ -451,28 +458,33 @@ When you make a commit, Git:
 > - A _commit object_ is created to store
 >   - pointer to the tree object
 >   - commit metadata
->     e.g. author, committer,  commit message, size
+>     e.g. author, committer, commit message, size
 >   - pointer to parents
 
-> [!NOTE] 
-> The commit or commits that came before another commit is its parent(s). 
+> [!NOTE]
+> The commit or commits that came before another commit is its parent(s).
+>
 > - The initial commit: zero parents
 > - A normal commit: one parent
 > - A merge commit: 2 or 3 parents
 
 #### What is a branch?
+
 In Git, a branch is simply a _lightweight movable_ **pointer** to a commit (the last commit or any of its parent).
+
 - Default branch names is `master` (now, it can be config to `main`)
 - Every time you commit, the `main` branch pointer moves forward automatically
 
-> [!NOTE] 
-> The `main` branch is 
+> [!NOTE]
+> The `main` branch is
+>
 > - not a special branch
 > - exactly like any other branch
->   
->The only reason nearly every repository has one branch name:
->- `master`: `git init` command creates it by default
->- `main`: Github/Gitlab create it by default
+>
+> The only reason nearly every repository has one branch name:
+>
+> - `master`: `git init` command creates it by default
+> - `main`: Github/Gitlab create it by default
 
 | What to do?                                   | How to do?                           | Example              |
 | --------------------------------------------- | ------------------------------------ | -------------------- |
@@ -481,79 +493,102 @@ In Git, a branch is simply a _lightweight movable_ **pointer** to a commit (the 
 
 > [!NOTE] Git branches and `HEAD`
 > To know which branch you're currently on, Git uses `HEAD` - a special pointer - to point to the local branch you're currently on.
-> ![[Pasted image 20240616013746.png]]
+> ![ ](assets/chapter-4/git-branch-and-HEAD.png)
 
-> [!TIP] 
+> [!TIP]
 > The `git branch` command only created a new branch:
+>
 > - It didn't switch to that branch, e.g. `testing`
 > - You're still on the previous branch, e.g. `master`
-> 
 
 > [!NOTE] How to change to another branch?
+>
 > - Use `git checkout BRANCH_NAME`
 > - Use `git switch BRANCH_NAME`
 
 > [!WARNING] Be careful when using `git checkout` to switch branch
->The `git checkout` can
->- checkout a branch (updates the working tree to match the branch commit)
->- checkout files of a branch (update these files in the working tree to match that branch commit)
+> The `git checkout` can
+>
+> - checkout a branch (updates the working tree to match the branch commit)
+> - checkout files of a branch (update these files in the working tree to match that branch commit)
 
 ### Patterns when using Git
 
 #### Gitflow Pattern
-![[Pasted image 20240616172953.png]]
+
+![ ](assets/chapter-4/gitflow-pattern.png)
 
 There are several branchs:
+
 - When a `feature`/`hotfix` branch is finished, it is merge to `develop` branch (the code has been _developed_)
 - The `develop` branch then merge to `release` branch to indicate these code is _ready to be deployed_
-	There may be
-	- a final test round.
-	- long testing phase with **release candidate**
+  There may be
+  - a final test round.
+  - long testing phase with **release candidate**
 
 During the merging process between branches, there can be one or more layers of approval prior to the merge being allowed.
+
 - These gatekeeping processes ensure quality of code.
 - But they also introduce a lot of friction between the development and the production.
+
 #### Trunk-Based Pattern
 
-![[Pasted image 20240616174230.png]]
+![ ](assets/chapter-4/trunk-based-pattern.png)
 
 The main idea of trunk-based pattern is to avoid:
+
 - long-running branches
 - large merges
-by deploying code to production (`trunk`) with minimal manually checks and a lot of automating test.
+  by deploying code to production (`trunk`) with minimal manually checks and a lot of automating test.
+
 ## Testing Code
+
 Most of the time, the requirements only include functional one.
 The non-functional requirements, e.g.
+
 - security
 - speed
-may be in the SLA - service-level agreement.
+  may be in the SLA - service-level agreement.
+
 ### Unit Testing
+
 unit testing
-: test in _small_ unit - e.g. function level, small pieces of code 
+: test in _small_ unit - e.g. function level, small pieces of code
 : ~ without external dependencies
 
 The main goal of uniting testing:
+
 - ensure the unit work as expected
 - maintain code standard
 - 100% code coverage
 
 Ideally, all unit tests should be executed in an automated manner.
+
 ### Integration Testing
+
 integration test
 : test together units of code
 : ensure they works together
+
 ### System Testing
+
 system test
 : combine all components in an environment as close as possible to the production environment
 : test both functional & non-functional requirements
+
 ### Automating Tests
+
 Automation is a key factor in determining the success of a DevSecOps team.
 There are a lot of tools that help automating testing of code, e.g. Selenium, Python binding to Selenium...
+
 #### Retrieving a page using Selenium, Python and Firefox
+
 You can run Python code to execute Selenium test that use a headless browser (e.g. Firefox) to:
+
 - capture the screenshot of a site
 - crawl a site
-e.g. Basic Python code to retrieve a web page and capture the result as a screenshot and as a page source
+  e.g. Basic Python code to retrieve a web page and capture the result as a screenshot and as a page source
+
 ```python
 #!/usr/bin/env python
 
@@ -569,7 +604,7 @@ driver = webdriver.Firefox(options=opts)
 driver.implicitly_wait(10)
 
 driver.get(proto_scheme + url)
-driver.get_screenshot_as_file('screenshot.png') 
+driver.get_screenshot_as_file('screenshot.png')
 
 result_file = 'page-source_' + url
 
@@ -579,21 +614,27 @@ with open(result_file,'w') as f:
 driver.close()
 driver.quit()
 ```
+
 - Execute the Python code
+
 ```shell
 python3 program.py
 
 # or
 # ./program.py
 ```
+
 #### Retrieving text with Selenium and Python
+
 ```python
 copyright = driver.find_element("xpath", "//p[contains(text(),'Copyright')]")
 print(copyright.text)
 ```
+
 ## Summary
-- When developing, try to 
-	- be intentional & deliberate
-	- know why using a pattern, a line of code
-- Git and git patterns: gitflow, trunk-based 
+
+- When developing, try to
+  - be intentional & deliberate
+  - know why using a pattern, a line of code
+- Git and git patterns: gitflow, trunk-based
 - Three levels of testing and automation test.
